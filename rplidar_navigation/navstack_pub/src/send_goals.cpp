@@ -1,17 +1,7 @@
-/*
- * Author: Automatic Addison
- * Date: May 30, 2021
- * ROS Version: ROS 1 - Melodic
- * Website: https://automaticaddison.com
- * This ROS node sends the robot goals to move to a particular location on 
- * a map. I have configured this program to the map of my own apartment.
- *
- * 1 = Bathroom
- * 2 = Bedroom
- * 3 = Front Door
- * 4 = Living Room
- * 5 = Home Office
- * 6 = Kitchen (Default)
+/**
+ * Site web : https://automaticaddison.com
+ * Ce nœud ROS envoie des objectifs au robot pour qu'il se déplace vers un endroit particulier sur une carte. 
+ * une carte. J'ai configuré ce programme sur la carte de mon propre appartement.
  */
 
 #include <ros/ros.h>

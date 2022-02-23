@@ -1,23 +1,20 @@
-/*
- * Automatic Addison
- * Date: May 21, 2021
- * ROS Version: ROS 1 - Melodic
- * Website: https://automaticaddison.com
- * Takes the current position and desired waypoint 
- *   as inputs and outputs a velocity command. It does not consider 
- *   obstacle avoidance.
- * Subscribe: ROS node that subscribes to the following topics:
- *   odom_data_euler : Current position and velocity estimate. 
- *                     The orientation.z variable is an Euler angle 
- *                     representing the yaw angle. (nav_msgs/Odometry)
- *   waypoint_2d : The desired locations where the robot needs to go 
- *                     (geometry_msgs/PoseStamped).
+/**
+ * Site web : https://automaticaddison.com
+ * Prend la position actuelle et le point de cheminement souhaité 
+ * comme entrées et sort une commande de vélocité. Il ne prend pas en compte 
+ * l'évitement des obstacles.
+ * S'abonner : Nœud ROS qui s'abonne aux sujets suivants :
+ * odom_data_euler : Estimation de la position et de la vélocité actuelles. 
+ * La variable orientation.z est un angle d'Euler 
+ * représentant l'angle de lacet. (nav_msgs/Odometry)
+ * Waypoint_2d : Les emplacements souhaités où le robot doit se rendre. 
+ * (geometry_msgs/PoseStamped).
  *
- * Publish: This node will publish to the following topics:
- *   cmd_vel : Linear & angular velocity command (geometry_msgs/Twist Message)
+ * Publier : Ce nœud publiera vers les sujets suivants :
+ * cmd_vel : Commande de vitesse linéaire et angulaire (geometry_msgs/Twist Message)
  *
- * Modified from Practical Robotics in C++ book (ISBN-10 : 9389423465)
- *   by Lloyd Brombach
+ * Modifié à partir du livre Practical Robotics in C++ (ISBN-10 : 9389423465)
+ * par Lloyd Brombach
  */
 
 // Include the relevant libraries

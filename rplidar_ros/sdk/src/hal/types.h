@@ -1,5 +1,5 @@
-/*
- *      Common Data Types for RP
+/**
+ * @brief Types de données communs pour RP
  */
 
 #ifndef _INFRA_HAL_TYPES_H_

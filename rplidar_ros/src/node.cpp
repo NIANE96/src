@@ -1,35 +1,24 @@
-/*
- *  RPLIDAR ROS NODE
+/**
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
  *
- *  Copyright (c) 2009 - 2014 RoboPeak Team
- *  http://www.robopeak.com
- *  Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
- *  http://www.slamtec.com
- *
- */
-/*
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * 
+ * @file node.cpp
+ * Fichier ROS Node RPlidar en C++
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
  */
 
 #include "ros/ros.h"
@@ -119,7 +108,10 @@ bool getRPLIDARDeviceInfo(ILidarDriver * drv)
         return false;
     }
 
-    // print out the device serial number, firmware and hardware version number..
+    /**
+    * @brief Imprimer le numéro de série du dispositif, le numéro de version du firmware et du matériel...
+    *
+    */
     char sn_str[35] = {0}; 
     for (int pos = 0; pos < 16 ;++pos) {
         sprintf(sn_str + (pos * 2),"%02X", devinfo.serialnum[pos]);
@@ -137,7 +129,6 @@ bool checkRPLIDARHealth(ILidarDriver * drv)
 
     op_result = drv->getHealth(healthinfo);
     if (SL_IS_OK(op_result)) { 
-        //ROS_INFO("RPLidar health status : %d", healthinfo.status);
         switch (healthinfo.status) {
 			case SL_LIDAR_STATUS_OK:
                 ROS_INFO("RPLidar health status : OK.");
@@ -200,8 +191,14 @@ int main(int argc, char * argv[]) {
     std::string frame_id;
     bool inverted = false;
     bool angle_compensate = true;    
-    float angle_compensate_multiple = 1.0;//min 360 ponits at per 1 degree
-    int points_per_circle = 360;//min 360 ponits at per circle 
+    float angle_compensate_multiple = 1.0;
+/**
+* @brief min 360 points par 1 degré
+*/
+    int points_per_circle = 360;
+/**
+* @brief min 360 points par cercle
+*/
     std::string scan_mode;
     float max_distance;
     float scan_frequency;
@@ -214,7 +211,10 @@ int main(int argc, char * argv[]) {
     nh_private.param<std::string>("udp_ip", udp_ip, "192.168.11.2"); 
     nh_private.param<int>("udp_port", udp_port, 8089);
     nh_private.param<std::string>("serial_port", serial_port, "/dev/ttyUSB0"); 
-    nh_private.param<int>("serial_baudrate", serial_baudrate, 115200/*256000*/);//ros run for A1 A2, change to 256000 if A3
+    nh_private.param<int>("serial_baudrate", serial_baudrate, 115200/*256000*/);
+/**
+* @brief Ros run pour A1 A2, changer à 256000 si A3
+*/
     nh_private.param<std::string>("frame_id", frame_id, "laser_frame");
     nh_private.param<bool>("inverted", inverted, false);
     nh_private.param<bool>("angle_compensate", angle_compensate, false);
@@ -233,7 +233,9 @@ int main(int argc, char * argv[]) {
 
     sl_result  op_result;
 
-    // create the driver instance
+    /**
+    * @brief Créer l'instance du pilote
+    */
     drv = *createLidarDriver();
     IChannel* _channel;
     if(channel_type == "tcp"){
@@ -258,7 +260,9 @@ int main(int argc, char * argv[]) {
         delete drv;
         return -1;
     }
-    // get rplidar device info
+    /**
+    * @brief  obtenir des informations sur le dispositif rplidar
+    */
     if(!getRPLIDARDeviceInfo(drv)){
        delete drv;
        return -1;
@@ -268,11 +272,15 @@ int main(int argc, char * argv[]) {
         return -1;
     }
     
-    //two service for start/stop lidar rotate
+    /**
+    * @brief deux services pour démarrer/arrêter la rotation du lidar
+    */
     ros::ServiceServer stop_motor_service = nh.advertiseService("stop_motor", stop_motor);
     ros::ServiceServer start_motor_service = nh.advertiseService("start_motor", start_motor);
 
-    //start lidar rotate
+    /**
+    * @brief démarrer la rotation du lidar
+    */
     drv->setMotorSpeed();
 
     LidarScanMode current_scan_mode;
@@ -306,7 +314,9 @@ int main(int argc, char * argv[]) {
 
     if(SL_IS_OK(op_result))
     {
-        //default frequent is 10 hz (by motor pwm value),  current_scan_mode.us_per_sample is the number of scan point per us        
+        /**
+        * @brief La fréquence par défaut est de 10 hz (par la valeur pwm du moteur), current_scan_mode.us_per_sample est le nombre de points de scan par us.
+        */     
         points_per_circle = (int)(1000*1000/current_scan_mode.us_per_sample/scan_frequency);
         angle_compensate_multiple = points_per_circle/360.0  + 1;
         if(angle_compensate_multiple < 1) 
@@ -365,7 +375,9 @@ int main(int argc, char * argv[]) {
                 } else {
                     int start_node = 0, end_node = 0;
                     int i = 0;
-                    // find the first valid node and last valid node
+                    /**
+                    * @brief trouver le premier nœud valide et le dernier nœud valide
+                    */
                     while (nodes[i++].dist_mm_q2 == 0);
                     start_node = i-1;
                     i = count -1;
@@ -381,7 +393,9 @@ int main(int argc, char * argv[]) {
                              frame_id);
                }
             } else if (op_result == SL_RESULT_OPERATION_FAIL) {
-                // All the data is invalid, just publish them
+                /** 
+                * @brief Toutes les données sont valides, il suffit de les publier.
+                */
                 float angle_min = DEG2RAD(0.0f);
                 float angle_max = DEG2RAD(359.0f);
                 publish_scan(&scan_pub, nodes, count,
@@ -394,7 +408,9 @@ int main(int argc, char * argv[]) {
         ros::spinOnce();
     }
 
-    // done!
+    /**
+    * @brief C'est fait !
+    */
     drv->setMotorSpeed(0);
     drv->stop();
     delete drv;

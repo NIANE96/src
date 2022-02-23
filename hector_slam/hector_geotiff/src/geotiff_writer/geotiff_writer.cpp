@@ -1,31 +1,26 @@
-//=================================================================================================
-// Copyright (c) 2011, Stefan Kohlbrecher, TU Darmstadt
-// All rights reserved.
-
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Simulation, Systems Optimization and Robotics
-//       group, TU Darmstadt nor the names of its contributors may be used to
-//       endorse or promote products derived from this software without
-//       specific prior written permission.
-
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY
-// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//=================================================================================================
-
+/**
+ *
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
+ *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * 
+ * @file geotiff_write.cpp
+ * Fichier geotiff_write cpp
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
+ */
 #include "hector_geotiff/geotiff_writer.h"
 #include <ros/console.h>
 
@@ -55,10 +50,10 @@ GeotiffWriter::GeotiffWriter( bool useCheckerboardCacheIn )
   char *fake_argv[3] = { new char[15], new char[10], new char[10] };
   strcpy( fake_argv[0], "geotiff_writer" );
   strcpy( fake_argv[1], "-platform" );
-  strcpy( fake_argv[2], "offscreen" ); // Set the env QT_DEBUG_PLUGINS to 1 to see available platforms
+  strcpy( fake_argv[2], "offscreen" ); /** @brief Définissez l'environnement QT_DEBUG_PLUGINS à 1 pour voir les plateformes disponibles.*/
 
   ROS_INFO("Creating application with offscreen platform.");
-  //Create a QApplication cause otherwise drawing text will crash
+  /** @brief Créer une QApplication car sinon le dessin du texte se plantera.*/
   app = new QApplication( fake_argc, fake_argv );
   delete[] fake_argv[0];
   delete[] fake_argv[1];
@@ -594,7 +589,7 @@ void GeotiffWriter::drawCoords()
 
   float arrowOffset = pixelsPerGeoTiffMeter * 0.15f;
 
-  // MAP ORIENTATION
+  /** @brief MAP ORIENTATION*/
   qPainter.setPen( QColor( 0, 50, 140 ));
   qPainter.drawLine( pixelsPerGeoTiffMeter / 2, pixelsPerGeoTiffMeter, pixelsPerGeoTiffMeter / 2,
                      2.0f * pixelsPerGeoTiffMeter );

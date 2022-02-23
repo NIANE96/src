@@ -1,26 +1,47 @@
-/*
- * Automatic Addison
- * Website: https://automaticaddison.com
- * Subscribe: ROS node that subscribes to the following topics:
- *  right_ticks : Tick counts from the right motor encoder (std_msgs/Int16)
- * 
- *  left_ticks : Tick counts from the left motor encoder  (std_msgs/Int16)
- * 
- *  imu/data : Data from the Inertial Measurement Unit (IMU) sensor  
- *                 (sensor_msgs/Imu.msg)
- *  initial_2d : The initial position and orientation of the robot.
- *               (geometry_msgs/PoseStamped)
+/**
  *
- * Publish: This node will publish to the following topics:
- *  odom_data_euler : Position and velocity estimate. The orientation.z 
- *                    variable is an Euler angle representing the yaw angle.
- *                    (nav_msgs/Odometry)
- *  odom_data_quat : Position and velocity estimate. The orientation is 
- *                   in quaternion format.
- *                   (nav_msgs/Odometry)
- * Modified from Practical Robotics in C++ book (ISBN-10 : 9389423465)
- *   by Lloyd Brombach
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
+ *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * Site web : https://automaticaddison.com
+ * S'abonner : Nœud ROS qui s'abonne aux sujets suivants :
+ * right_ticks : Nombre de tics provenant de l'encodeur du moteur droit (std_msgs/Int16)
+ * 
+ * left_ticks : Nombre de tics de l'encodeur du moteur gauche (std_msgs/Int16)
+ * 
+ * imu/data : Données du capteur de l'unité de mesure inertielle (IMU).  
+ * (sensor_msgs/Imu.msg)
+ * initial_2d : La position et l'orientation initiales du robot.
+ * (geometry_msgs/PoseStamped)
+ *
+ * Publier : Ce nœud va publier vers les sujets suivants :
+ * odom_data_euler : Estimation de la position et de la vitesse. La variable orientation.z 
+ * est un angle d'Euler représentant l'angle de lacet.
+ * (nav_msgs/Odometry)
+ * odom_data_quat : Estimation de la position et de la vitesse. L'orientation est 
+ * au format quaternion.
+ * (nav_msgs/Odometry)
+ * Modifié à partir du livre Practical Robotics in C++ (ISBN-10 : 9389423465)
+ * par Lloyd Brombach
+ * 
+ * @file map_to_image_node.cpp
+ * Fichier map_to_image_node cpp
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
  */
+
 
 // Include various libraries
 #include "ros/ros.h" 

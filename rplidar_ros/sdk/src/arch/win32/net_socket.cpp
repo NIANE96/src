@@ -1,9 +1,25 @@
-/*
- *  RoboPeak Project
- *  HAL Layer - Socket Interface
- *  Copyright 2009 - 2013 RoboPeak Project
+/**
+ * RPLIDAR SDK
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
  *
- *  Win32 Implementation
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * 
+ * @file net_socket.cpp
+ * Fichier net_socket cpp
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
  */
 
 #define _WINSOCKAPI_

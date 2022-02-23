@@ -1,27 +1,46 @@
-/*
- * Automatic Addison
- * Date: May 20, 2021
- * ROS Version: ROS 1 - Melodic
- * Website: https://automaticaddison.com
- * Publishes odometry information for use with robot_pose_ekf package.
- *   This odometry information is based on wheel encoder tick counts.
- * Subscribe: ROS node that subscribes to the following topics:
- *  right_ticks : Tick counts from the right motor encoder (std_msgs/Int16)
- * 
- *  left_ticks : Tick counts from the left motor encoder  (std_msgs/Int16)
- * 
- *  initial_2d : The initial position and orientation of the robot.
- *               (geometry_msgs/PoseStamped)
+/**
  *
- * Publish: This node will publish to the following topics:
- *  odom_data_euler : Position and velocity estimate. The orientation.z 
- *                    variable is an Euler angle representing the yaw angle.
- *                    (nav_msgs/Odometry)
- *  odom_data_quat : Position and velocity estimate. The orientation is 
- *                   in quaternion format.
- *                   (nav_msgs/Odometry)
- * Modified from Practical Robotics in C++ book (ISBN-10 : 9389423465)
- *   by Lloyd Brombach
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
+ * date 2022
+ * version ros 1 kinetic
+ *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * Publie des informations d'odométrie à utiliser avec le paquet robot_pose_ekf.
+ * Ces informations d'odométrie sont basées sur le nombre de tics de l'encodeur de roue.
+ * Subscribe : Nœud ROS qui s'abonne aux sujets suivants :
+ * right_ticks : Comptes de tics de l'encodeur du moteur droit (std_msgs/Int16)
+ * 
+ * left_ticks : nombre de tics provenant de l'encodeur du moteur gauche (std_msgs/Int16).
+ * 
+ * initial_2d : La position et l'orientation initiales du robot.
+ * (geometry_msgs/PoseStamped)
+ *
+ * Publier : Ce nœud publiera vers les sujets suivants :
+ * odom_data_euler : Estimation de la position et de la vitesse. La variable orientation.z 
+ * est un angle d'Euler représentant l'angle de lacet.
+ * (nav_msgs/Odometry)
+ * odom_data_quat : Estimation de la position et de la vitesse. L'orientation est 
+ * au format quaternion.
+ * (nav_msgs/Odometry)
+ * Modifié à partir du livre Practical Robotics in C++ (ISBN-10 : 9389423465)
+ * par loyd Brombach
+ * 
+ * @file hector_trajectory_server.cpp
+ * Fichier hector_trajectory_server cpp
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
  */
 
 // Include various libraries
@@ -33,34 +52,35 @@
 #include <tf2_ros/transform_broadcaster.h>
 #include <cmath>
 
-// Create odometry data publishers
+/** @brief Create odometry data publishers*/
 ros::Publisher odom_data_pub;
 ros::Publisher odom_data_pub_quat;
 nav_msgs::Odometry odomNew;
 nav_msgs::Odometry odomOld;
 
-// Initial pose
+/** @brief Initial pose*/
 const double initialX = 0.0;
 const double initialY = 0.0;
 const double initialTheta = 0.00000000001;
 const double PI = 3.141592;
 
-// Robot physical constants
-const double TICKS_PER_REVOLUTION = 620; // For reference purposes.
-const double WHEEL_RADIUS = 0.033; // Wheel radius in meters
-const double WHEEL_BASE = 0.17; // Center of left tire to center of right tire
-const double TICKS_PER_METER = 3100; // Original was 2800
+/** @brief Constantes physiques du robot*/
+const double TICKS_PER_REVOLUTION = 620; // À titre de référence.
+const double WHEEL_RADIUS = 0.033; //  Rayon de la roue en mètres
+const double WHEEL_BASE = 0.17; // Du centre du pneu gauche au centre du pneu droit
+const double TICKS_PER_METER = 3100; // L'original était de 2800
 
-// Distance both wheels have traveled
+/** @brief Distance parcourue par les deux roues*/
 double distanceLeft = 0;
 double distanceRight = 0;
 
-// Flag to see if initial pose has been received
+/** @brief Drapeau pour voir si la pose initiale a été reçue*/
 bool initialPoseRecieved = false;
 
 using namespace std;
 
-// Get initial_2d message from either Rviz clicks or a manual pose publisher
+/** @brief Obtenir le message initial_2d à partir de clics Rviz ou d'un éditeur de pose manuel
+* @fn void set_initial_2d(const geometry_msgs::PoseStamped &rvizClick) */
 void set_initial_2d(const geometry_msgs::PoseStamped &rvizClick) {
 
   odomOld.pose.pose.position.x = rvizClick.pose.position.x;
@@ -69,7 +89,8 @@ void set_initial_2d(const geometry_msgs::PoseStamped &rvizClick) {
   initialPoseRecieved = true;
 }
 
-// Calculate the distance the left wheel has traveled since the last cycle
+/** @brief Calculer la distance parcourue par la roue gauche depuis le dernier cycle.
+* @fn void Calc_Left(const std_msgs::Int16& leftCount) */
 void Calc_Left(const std_msgs::Int16& leftCount) {
 
   static int lastCountL = 0;
@@ -89,7 +110,8 @@ void Calc_Left(const std_msgs::Int16& leftCount) {
   lastCountL = leftCount.data;
 }
 
-// Calculate the distance the right wheel has traveled since the last cycle
+/** @brief Calculer la distance parcourue par la roue droite depuis le dernier cycle.
+* @fn void Calc_Right(const std_msgs::Int16& rightCount) */
 void Calc_Right(const std_msgs::Int16& rightCount) {
   
   static int lastCountR = 0;
@@ -149,16 +171,17 @@ void publish_quat() {
   odom_data_pub_quat.publish(quatOdom);
 }
 
-// Update odometry information
+/** @brief Mise à jour des informations d'odométrie
+* @fn void update_odom() */
 void update_odom() {
 
-  // Calculate the average distance
+  /** @brief Calculer la distance moyenne*/
   double cycleDistance = (distanceRight + distanceLeft) / 2;
   
-  // Calculate the number of radians the robot has turned since the last cycle
+  /** @brief Calcule le nombre de radians que le robot a tourné depuis le dernier cycle*/.
   double cycleAngle = asin((distanceRight-distanceLeft)/WHEEL_BASE);
 
-  // Average angle during the last cycle
+  /** @brief Angle moyen pendant le dernier cycle*/
   double avgAngle = cycleAngle/2 + odomOld.pose.pose.orientation.z;
 	
   if (avgAngle > PI) {
@@ -169,12 +192,12 @@ void update_odom() {
   }
   else{}
 
-  // Calculate the new pose (x, y, and theta)
+  /** @brief Calculer la nouvelle pose (x, y, et thêta)*/
   odomNew.pose.pose.position.x = odomOld.pose.pose.position.x + cos(avgAngle)*cycleDistance;
   odomNew.pose.pose.position.y = odomOld.pose.pose.position.y + sin(avgAngle)*cycleDistance;
   odomNew.pose.pose.orientation.z = cycleAngle + odomOld.pose.pose.orientation.z;
 
-  // Prevent lockup from a single bad cycle
+ /** @brief Empêcher le verrouillage d'un seul mauvais cycle*/
   if (isnan(odomNew.pose.pose.position.x) || isnan(odomNew.pose.pose.position.y)
      || isnan(odomNew.pose.pose.position.z)) {
     odomNew.pose.pose.position.x = odomOld.pose.pose.position.x;
@@ -182,7 +205,7 @@ void update_odom() {
     odomNew.pose.pose.orientation.z = odomOld.pose.pose.orientation.z;
   }
 
-  // Make sure theta stays in the correct range
+  /** @brief S'assurer que le thêta reste dans la bonne fourchette*/.
   if (odomNew.pose.pose.orientation.z > PI) {
     odomNew.pose.pose.orientation.z -= 2 * PI;
   }
@@ -191,24 +214,24 @@ void update_odom() {
   }
   else{}
 
-  // Compute the velocity
+  /** @brief Calcul de la vélocité*/
   odomNew.header.stamp = ros::Time::now();
   odomNew.twist.twist.linear.x = cycleDistance/(odomNew.header.stamp.toSec() - odomOld.header.stamp.toSec());
   odomNew.twist.twist.angular.z = cycleAngle/(odomNew.header.stamp.toSec() - odomOld.header.stamp.toSec());
 
-  // Save the pose data for the next cycle
+   /** @brief Sauvegarde des données de pose pour le prochain cycle*/
   odomOld.pose.pose.position.x = odomNew.pose.pose.position.x;
   odomOld.pose.pose.position.y = odomNew.pose.pose.position.y;
   odomOld.pose.pose.orientation.z = odomNew.pose.pose.orientation.z;
   odomOld.header.stamp = odomNew.header.stamp;
 
-  // Publish the odometry message
+/** @brief Publier le message d'odométrie*/
   odom_data_pub.publish(odomNew);
 }
 
 int main(int argc, char **argv) {
   
-  // Set the data fields of the odometry message
+    /** @brief Définir les champs de données du message d'odométrie*/
   odomNew.header.frame_id = "odom";
   odomNew.pose.pose.position.z = 0;
   odomNew.pose.pose.orientation.x = 0;
@@ -223,19 +246,20 @@ int main(int argc, char **argv) {
   odomOld.pose.pose.position.y = initialY;
   odomOld.pose.pose.orientation.z = initialTheta;
 
-  // Launch ROS and create a node
+
+  /** @brief Lancer ROS et créer un nœud*/
   ros::init(argc, argv, "ekf_odom_pub");
   ros::NodeHandle node;
 
-  // Subscribe to ROS topics
+    /** @brief S'abonner à des sujets ROS*/
   ros::Subscriber subForRightCounts = node.subscribe("right_ticks", 100, Calc_Right, ros::TransportHints().tcpNoDelay());
   ros::Subscriber subForLeftCounts = node.subscribe("left_ticks", 100, Calc_Left, ros::TransportHints().tcpNoDelay());
   ros::Subscriber subInitialPose = node.subscribe("initial_2d", 1, set_initial_2d);
 
-  // Publisher of simple odom message where orientation.z is an euler angle
+/** @brief Publisher of simple odom message ou orientation.z es un angle euler*/
   odom_data_pub = node.advertise<nav_msgs::Odometry>("odom_data_euler", 100);
 
-  // Publisher of full odom message where orientation is quaternion
+   /** @brief Editeur du message odom complet où l'orientation est quaternion*/
   odom_data_pub_quat = node.advertise<nav_msgs::Odometry>("odom_data_quat", 100);
 
   ros::Rate loop_rate(30); 

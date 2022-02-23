@@ -1,20 +1,17 @@
 /*
- * Automatic Addison
- * Date: May 26, 2021
- * ROS Version: ROS 1 - Melodic
- * Website: https://automaticaddison.com
- * ROS node that subscribes to the pose of the robot and publishes 
- * an odom to base_footprint transform based on the data.
- * Subscribe:  
- *   robot_pose_ekf/odom_combined : Current position and velocity estimate. 
- *                     The orientation is a quaternion 
- *                     (geometry_msgs/PoseWithCovarianceStamped).
+ * Site web : https://automaticaddison.com
+ * Nœud ROS qui s'abonne à la pose du robot et qui publie 
+ * une transformation odom to base_footprint basée sur les données.
+ * S'abonner :  
+ * robot_pose_ekf/odom_combined : Position actuelle et estimation de la vitesse. 
+ * L'orientation est un quaternion 
+ * (geometry_msgs/PoseWithCovarianceStamped).
  *
- * Publish: This node will publish to the following topics:
- *  odom to base_footprint : The pose of the base_footprint coordinate frame
- *                           inside the odom coordinate frame (tf/tfMessage)
- * Modified from Practical Robotics in C++ book (ISBN-10 : 9389423465)
- *   by Lloyd Brombach
+ * Publier : Ce nœud va publier vers les sujets suivants :
+ * odom to base_footprint : La pose du cadre de coordonnées base_footprint
+ * à l'intérieur du cadre de coordonnées odom (tf/tfMessage)
+ * Modifié à partir du livre Practical Robotics in C++ (ISBN-10 : 9389423465)
+ * par Lloyd Brombach
  */
  
  // Include the relevant libraries

@@ -1,27 +1,24 @@
-/*
- * Automatic Addison
- * Date: May 28, 2021
- * ROS Version: ROS 1 - Melodic
- * Website: https://automaticaddison.com
- * This ROS node uses the A* path planning algorithm to find
- *  the least-cost path from a starting location to a goal location.
- * Subscribe: ROS node that subscribes to the following topics:
- *   /costmap : Our costmap that will be generated as soon as an 
- *             initial pose is set (nav_msgs::OccupancyGrid).
- *   /goal_2d : Goal position and orientation (geometry_msgs::PoseStamped).
- *   Note: The current pose of the robot comes by looking up the 
- *        transform between the odom frame and the base_link using 
- *        the ROS tf package.
+/**
+ * Site web : https://automaticaddison.com
+ * Ce nœud ROS utilise l'algorithme de planification de chemin A* pour trouver le chemin le moins coûteux entre un point de départ et un point d'arrivée.
+ * le chemin le moins coûteux entre un point de départ et un point d'arrivée.
+ * S'abonner : Nœud ROS qui s'abonne aux sujets suivants :
+ * /costmap : Notre carte de coûts qui sera générée dès qu'une * pose initiale est définie (nav_costmap). 
+ * pose initiale est définie (nav_msgs::OccupancyGrid).
+ * /goal_2d : Position et orientation du but (geometry_msgs::PoseStamped).
+ * Remarque : la pose actuelle du robot est obtenue en recherchant la transformation entre la trame odom et la trame odom. 
+ * la transformation entre le cadre odom et la base_link en utilisant 
+ * le paquet ROS tf.
  *
- * Publish: This node will publish to the following topics:
- *   /waypoint_2d : The desired locations where the robot needs to go in order 
- *                  to get to the goal (geometry_msgs/PoseStamped).
- *   /path: The planned path as determined by the A* path planning algorithm. 
- *          This path can be loaded into RViz to see the planned path on 
- *          the map (nav_msgs::Path).
+ * Publier : Ce nœud va publier vers les sujets suivants :
+ * /waypoint_2d : Les emplacements souhaités où le robot doit se rendre pour * atteindre l'objectif (geometry_msgs/PoseStamped). 
+ * pour atteindre l'objectif (geometry_msgs/PoseStamped).
+ * /path : La trajectoire planifiée telle que déterminée par l'algorithme de planification de trajectoire A*. 
+ * Ce chemin peut être chargé dans RViz pour voir le chemin planifié sur la carte (nav_msgs/PoseStamped). 
+ * la carte (nav_msgs::Path).
  *
- * Modified from Practical Robotics in C++ book (ISBN-10 : 9389423465)
- *   by Lloyd Brombach
+ * Modifié à partir du livre Practical Robotics in C++ (ISBN-10 : 9389423465)
+ * par Lloyd Brombach
  */
  
 // Include the relevant libraries

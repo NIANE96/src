@@ -1,31 +1,26 @@
-//=================================================================================================
-// Copyright (c) 2011, Stefan Kohlbrecher, TU Darmstadt
-// All rights reserved.
-
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Simulation, Systems Optimization and Robotics
-//       group, TU Darmstadt nor the names of its contributors may be used to
-//       endorse or promote products derived from this software without
-//       specific prior written permission.
-
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY
-// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//=================================================================================================
-
+/**
+ *
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
+ *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * 
+ * @file HectorMaping.cpp
+ * Fichier HectorMaping cpp
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
+ */
 #include "HectorMappingRos.h"
 
 #include "map/GridMap.h"
@@ -247,16 +242,18 @@ void HectorMappingRos::scanCallback(const sensor_msgs::LaserScan& scan)
   ros::WallTime start_time = ros::WallTime::now();
   if (!p_use_tf_scan_transformation_)
   {
-    // If we are not using the tf tree to find the transform between the base frame and laser frame,
-    // then just convert the laser scan to our data container and process the update based on our last
+     /** 
+    * @brief Si nous n'utilisons pas l'arbre tf pour trouver la transformation entre l'image de base et l'image laser, il suffit de convertir le scan laser dans notre conteneur de données et de traiter la mise à jour en fonction de notre dernière transformation.
+*/
     // pose estimate
     this->rosLaserScanToDataContainer(scan, laserScanContainer, slamProcessor->getScaleToMap());
     slamProcessor->update(laserScanContainer, slamProcessor->getLastScanMatchPose());
   }
   else
   {
-    // If we are using the tf tree to find the transform between the base frame and laser frame,
-    // let's get that transform
+     /** 
+    * @brief Si nous utilisons l'arbre tf pour trouver la transformation entre l'image de base et l'image laser, obtenons cette transformation.
+   */
     const ros::Duration dur(0.5);
     tf::StampedTransform laser_transform;
     if (tf_.waitForTransform(p_base_frame_, scan.header.frame_id, scan.header.stamp, dur))
@@ -269,29 +266,31 @@ void HectorMappingRos::scanCallback(const sensor_msgs::LaserScan& scan)
       return;
     }
 
-    // Convert the laser scan to point cloud
+    /**
+    * @brief Convertir le scan laser en nuage de points
+    */
     projector_.projectLaser(scan, laser_point_cloud_, 30.0);
 
-    // Publish the point cloud if there are any subscribers
+   /** @brief Publier le nuage de points s'il y a des abonnés */
     if (scan_point_cloud_publisher_.getNumSubscribers() > 0)
     {
       scan_point_cloud_publisher_.publish(laser_point_cloud_);
     }
 
-    // Convert the point cloud to our data container
+   /** @brief Convertissez le nuage de points dans notre conteneur de données*/
     this->rosPointCloudToDataContainer(laser_point_cloud_, laser_transform, laserScanContainer, slamProcessor->getScaleToMap());
 
-    // Now let's choose the initial pose estimate for our slam process update
+    /** @brief Maintenant, choisissons l'estimation de la pose initiale pour notre mise à jour du processus de claquement*/
     Eigen::Vector3f start_estimate(Eigen::Vector3f::Zero());
     if (initial_pose_set_)
     {
-      // User has requested a pose reset
+       /** @brief L'utilisateur a demandé une réinitialisation de la pose */
       initial_pose_set_ = false;
       start_estimate = initial_pose_;
     }
     else if (p_use_tf_pose_start_estimate_)
     {
-      // Initial pose estimate comes from the tf tree
+   /** @brief L'estimation de la pose initiale provient de l'arbre tf*/
       try
       {
         tf::StampedTransform stamped_pose;
@@ -332,7 +331,7 @@ void HectorMappingRos::scanCallback(const sensor_msgs::LaserScan& scan)
     ROS_INFO("HectorSLAM Iter took: %f milliseconds", duration.toSec()*1000.0f );
   }
 
-  // If we're just building a map with known poses, we're finished now. Code below this point publishes the localization results.
+/** @brief Si nous ne faisons que construire une carte avec des poses connues, nous avons terminé maintenant. Le code en dessous de ce point publie les résultats de la localisation.*/
   if (p_map_with_known_poses_)
   {
     return;
@@ -340,11 +339,11 @@ void HectorMappingRos::scanCallback(const sensor_msgs::LaserScan& scan)
 
   poseInfoContainer_.update(slamProcessor->getLastScanMatchPose(), slamProcessor->getLastScanMatchCovariance(), scan.header.stamp, p_map_frame_);
 
-  // Publish pose with and without covariances
+   /** @brief Publier la pose avec et sans covariances*/
   poseUpdatePublisher_.publish(poseInfoContainer_.getPoseWithCovarianceStamped());
   posePublisher_.publish(poseInfoContainer_.getPoseStamped());
 
-  // Publish odometry if enabled
+  /** @brief Publier l'odométrie si activée*/
   if(p_pub_odometry_)
   {
     nav_msgs::Odometry tmp;
@@ -355,7 +354,7 @@ void HectorMappingRos::scanCallback(const sensor_msgs::LaserScan& scan)
     odometryPublisher_.publish(tmp);
   }
 
-  // Publish the map->odom transform if enabled
+   /** @brief Publier la transformation map->odom si activée*/
   if (p_pub_map_odom_transform_)
   {
     tf::StampedTransform odom_to_base;
@@ -373,7 +372,7 @@ void HectorMappingRos::scanCallback(const sensor_msgs::LaserScan& scan)
     tfB_->sendTransform( tf::StampedTransform (map_to_odom_, scan.header.stamp, p_map_frame_, p_odom_frame_));
   }
 
-  // Publish the transform from map to estimated pose (if enabled)
+ /** @brief Publier la transformation de la carte à la pose estimée (si activé)*/
   if (p_pub_map_scanmatch_transform_)
   {
     tfB_->sendTransform( tf::StampedTransform(poseInfoContainer_.getTfTransform(), scan.header.stamp, p_map_frame_, p_tf_map_scanmatch_transform_frame_name_));
@@ -410,17 +409,17 @@ bool HectorMappingRos::resetMapCallback(std_srvs::Trigger::Request  &req,
 bool HectorMappingRos::restartHectorCallback(hector_mapping::ResetMapping::Request  &req,
                                              hector_mapping::ResetMapping::Response &res)
 {
-  // Reset map
+  /** @brief Réinitialiser map*/
   ROS_INFO("HectorSM Reset map");
   slamProcessor->reset();
 
-  // Reset pose
+  /** @brief Réinitialiser position*/
   this->resetPose(req.initial_pose);
 
-  // Unpause node (in case it is paused)
+  /** @brief Déplacer le nœud (s'il est en pause)*/
   this->toggleMappingPause(false);
 
-  // Return success
+ /** @brief Retourner le succès*/
   return true;
 }
 
@@ -436,7 +435,7 @@ void HectorMappingRos::publishMap(MapPublisherContainer& mapPublisher, const hec
 {
   nav_msgs::GetMap::Response& map_ (mapPublisher.map_);
 
-  //only update map if it changed
+  /** @brief ne mettre à jour la carte que si elle a changé*/
   if (lastGetMapUpdateIndex != gridMap.getUpdateIndex())
   {
 

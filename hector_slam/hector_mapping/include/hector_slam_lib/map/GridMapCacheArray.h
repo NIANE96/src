@@ -1,31 +1,26 @@
-//=================================================================================================
-// Copyright (c) 2011, Stefan Kohlbrecher, TU Darmstadt
-// All rights reserved.
-
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Simulation, Systems Optimization and Robotics
-//       group, TU Darmstadt nor the names of its contributors may be used to
-//       endorse or promote products derived from this software without
-//       specific prior written permission.
-
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY
-// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//=================================================================================================
-
+/**
+ *
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
+ *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * 
+ * @file GridMapCase.h
+ * Fichier GridMapCase h
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
+ */
 #ifndef __GridMapCacheArray_h_
 #define __GridMapCacheArray_h_
 
@@ -39,14 +34,14 @@ public:
 };
 
 /**
- * Caches filtered grid map accesses in a two dimensional array of the same size as the map.
+ * @brief Met en cache les accès à la carte de la grille filtrée dans un tableau bidimensionnel de la même taille que la carte.
  */
 class GridMapCacheArray
 {
 public:
 
   /**
-   * Constructor
+   * Constructeur
    */
   GridMapCacheArray()
     : cacheArray(0)
@@ -56,7 +51,7 @@ public:
   }
 
   /**
-   * Destructor
+   * Destructeur
    */
   ~GridMapCacheArray()
   {
@@ -64,7 +59,7 @@ public:
   }
 
   /**
-   * Resets/deletes the cached data
+   * Réinitialisation/suppression des données mises en cache
    */
   void resetCache()
   {
@@ -72,10 +67,10 @@ public:
   }
 
   /**
-   * Checks wether cached data for coords is available. If this is the case, writes data into val.
-   * @param coords The coordinates
-   * @param val Reference to a float the data is written to if available
-   * @return Indicates if cached data is available
+   * Vérifie si les données mises en cache pour les coordonnées sont disponibles. Si c'est le cas, écrit les données dans val.
+   * @param coords Les coordonnées
+   * @param val Référence à un flottant dans lequel les données sont écrites si disponible
+   * @return Indique si les données mises en cache sont disponibles
    */
   bool containsCachedData(int index, float& val)
   {
@@ -90,9 +85,9 @@ public:
   }
 
   /**
-   * Caches float value val for coordinates coords.
-   * @param coords The coordinates
-   * @param val The value to be cached for coordinates.
+   * Met en cache la valeur flottante val pour les coordonnées coords.
+   * @param coords Les coordonnées
+   * @param val la valeur à mettre en cache pour les coordonnées.
    */
   void cacheData(int index, float val)
   {
@@ -102,8 +97,8 @@ public:
   }
 
   /**
-   * Sets the map size and resizes the cache array accordingly
-   * @param sizeIn The map size.
+   * Définit la taille de la carte et redimensionne le tableau de cache en conséquence.
+   * @param La taille de la carte.
    */
   void setMapSize(const Eigen::Vector2i& newDimensions)
   {
@@ -113,8 +108,8 @@ public:
 protected:
 
   /**
-   * Creates a cache array of size sizeIn.
-   * @param sizeIn The size of the array
+   * Crée un tableau de cache de taille sizeIn.
+   * @param sizeIn La taille du tableau
    */
   void createCacheArray(const Eigen::Vector2i& newDimensions)
   {
@@ -133,7 +128,7 @@ protected:
   }
 
   /**
-   * Deletes the existing cache array.
+   * Supprime le tableau de cache existant.
    */
   void deleteCacheArray()
   {
@@ -141,7 +136,7 @@ protected:
   }
 
   /**
-   * Sets a new cache array size
+   * Définir une nouvelle taille de tableau de cache
    */
   void setArraySize(const Eigen::Vector2i& newDimensions)
   {

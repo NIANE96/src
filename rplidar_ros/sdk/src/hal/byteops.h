@@ -1,14 +1,34 @@
-/*
- *  RoboPeak Project
- *  Copyright 2009 - 2013
+/**
+ * RPLIDAR SDK
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
+ *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * 
+ * @file net_socket.cpp
+ * Fichier net_socket cpp
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
  *  
- *  RPOS - Byte Operations
+ *  RPOS - Opérations sur les octets
  *
  */
 
 #pragma once
 
-// byte swapping operations for compiling time
+/**
+ * @brief opérations d'échange d'octets pour la compilation*/
 
 #define __static_byteswap_16(x)  ((_u16)(				\
 	(((_u16)(x) & (_u16)0x00FFU) << 8) |			\

@@ -1,38 +1,33 @@
-//=================================================================================================
-// Copyright (c) 2011, Stefan Kohlbrecher, TU Darmstadt
-// All rights reserved.
-
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Simulation, Systems Optimization and Robotics
-//       group, TU Darmstadt nor the names of its contributors may be used to
-//       endorse or promote products derived from this software without
-//       specific prior written permission.
-
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY
-// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//=================================================================================================
-
+/**
+ *
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
+ *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * 
+ * @file GridMapLogo.h
+ * Fichier GridMapLogo h
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
+ */
 #ifndef __GridMapLogOdds_h_
 #define __GridMapLogOdds_h_
 
 #include <cmath>
 
 /**
- * Provides a log odds of occupancy probability representation for cells in a occupancy grid map.
+ * Fournit une représentation des probabilités d'occupation en logarithme pour les cellules d'une carte de grille d'occupation.
  */
 class LogOddsCell
 {
@@ -52,8 +47,8 @@ public:
 
 
   /**
-   * Sets the cell value to val.
-   * @param val The log odds value.
+   * Attribue la valeur val à la cellule.
+   * @param val La valeur logarithmique des chances.
    */
   void set(float val)
   {
@@ -61,8 +56,8 @@ public:
   }
 
   /**
-   * Returns the value of the cell.
-   * @return The log odds value.
+   * Renvoie la valeur de la cellule.
+   * @return La valeur de la probabilité logarithmique.
    */
   float getValue() const
   {
@@ -70,8 +65,8 @@ public:
   }
 
   /**
-   * Returns wether the cell is occupied.
-   * @return Cell is occupied
+   * Retourne si la cellule est occupée.
+   * @return La cellule est occupée
    */
   bool isOccupied() const
   {
@@ -84,7 +79,7 @@ public:
   }
 
   /**
-   * Reset Cell to prior probability.
+   * Remettre la cellule à la probabilité antérieure.
    */
   void resetGridCell()
   {
@@ -103,14 +98,14 @@ public:
 };
 
 /**
- * Provides functions related to a log odds of occupancy probability respresentation for cells in a occupancy grid map.
+ * Fournit des fonctions liées à une représentation des probabilités d'occupation en logarithme pour les cellules dans une carte de grille d'occupation.
  */
 class GridMapLogOddsFunctions
 {
 public:
 
   /**
-   * Constructor, sets parameters like free and occupied log odds ratios.
+   * Constructeur, définit les paramètres tels que les logarithmes des odds ratios libres et occupés.
    */
   GridMapLogOddsFunctions()
   {
@@ -129,8 +124,8 @@ public:
   }
 
   /**
-   * Update cell as occupied
-   * @param cell The cell.
+   * Mettre à jour la cellule comme étant occupée
+   * @param La cellule.
    */
   void updateSetOccupied(LogOddsCell& cell) const
   {
@@ -140,8 +135,8 @@ public:
   }
 
   /**
-   * Update cell as free
-   * @param cell The cell.
+   * Mettre à jour la cellule comme étant libre
+   * @param La cellule.
    */
   void updateSetFree(LogOddsCell& cell) const
   {
@@ -156,9 +151,9 @@ public:
   }
 
   /**
-   * Get the probability value represented by the grid cell.
-   * @param cell The cell.
-   * @return The probability
+   * Obtenir la valeur de probabilité représentée par la cellule de la grille.
+   * @param la cellule.
+   * @return La probabilité
    */
   float getGridProbability(const LogOddsCell& cell) const
   {

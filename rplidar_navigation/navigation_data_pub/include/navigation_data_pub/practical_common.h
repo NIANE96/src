@@ -1,12 +1,25 @@
-/*
- * Automatic Addison
- * Date: May 28, 2021
- * ROS Version: ROS 1 - Melodic
- * Website: https://automaticaddison.com
- * Include file for the A* path planner
+/**
  *
- * Modified from Practical Robotics in C++ book (ISBN-10 : 9389423465)
- *   by Lloyd Brombach
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
+ *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * http://www.slamtec.com
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * 
+ * @file pratical_camon.h
+ * Fichier pratical_camon h
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
  */
 
 #ifndef PRACTICAL_COMMON_H_
@@ -15,14 +28,13 @@
 #include <math.h>
 #include<iostream>
 
-//cells from other sources set above this will be considered 100% occupied
+/** @distance brève du centre du robot au point extérieur le plus éloigné, en mètres*/
 const int OCCUPIED_THRESHOLD = 50;
 
-// distance from center of robot to furthest exterior point, in meters
+/** @distance brève du centre du robot au point extérieur le plus éloigné, en mètres*/
 const double ROBOT_RADIUS = .14;
 
-//3 helper functions to get x, y coordinates from index,
-//and index from x, y coordinates, based on  index = ogm.info.width * y + x
+/** @brief 3 fonctions d'aide pour obtenir les coordonnées x, y à partir de l'index, et l'index à partir des coordonnées x, y, sur la base de index = ogm.info.width * y + x */
 int getX(int index, const nav_msgs::OccupancyGridPtr &map)
 {
     return index % map->info.width;
@@ -37,20 +49,20 @@ int getIndex(int x, int y, const nav_msgs::OccupancyGridPtr &map)
 }
 
 
-//helper function to stay in map boundaries and avoid segfaults
+/** @brief fonction d'aide pour rester dans les limites de la carte et éviter les erreurs de segmentation*/
 bool is_in_bounds(int x, int y, const nav_msgs::OccupancyGridPtr &map)
 {
     return (x >= 0 && x < map->info.width && y >= 0 && y < map->info.height);
 }
 
-//helper to check if cell is marked unknown
+/** @brief helper pour vérifier si la cellule est marquée comme étant inconnue*/
 bool is_unknown(int x, int y, const nav_msgs::OccupancyGridPtr &map)
 {
     return ((int)map->data[getIndex(x, y, map)] == -1);
 }
 
 
-//helper to check if cell is to be considered an obstacle - includes cells marked unknown
+/** @brief helper pour vérifier si la cellule doit être considérée comme un obstacle - inclut les cellules marquées inconnues*/
 bool is_obstacle(int x, int y, const nav_msgs::OccupancyGridPtr &map)
 {
  //   std::cout<<x<<", "<<y<< " .... "<<(int)map->data[getIndex(x, y, map)]<<std::endl;
@@ -58,7 +70,7 @@ bool is_obstacle(int x, int y, const nav_msgs::OccupancyGridPtr &map)
 }
 
 
-//helper to return map resolution
+/** @brieff helper to return map resolution*/
 double map_resolution(const nav_msgs::OccupancyGridPtr &map)
 {
     return map->info.resolution;
@@ -79,18 +91,18 @@ double get_m(double x1, double y1, double x2, double y2)
 //DO NOT MIX POSE COORDINATES WITH GRID CELL COORDINATES - MAKE ALL THE SAME
 double get_b(double x1, double y1, double x2, double y2)
 {
-  //  cannot divide by zer0
+  //  ne peut pas diviser par zer0
     if(x1 != x2)
     {
     return y1 - (get_m(x1, y1, x2, y2) * x1);
     }
-    else return x1; //line is vertical, so b = x1
+    else return x1; //La ligne est verticale, donc b = x1
 }
 
-//returns where y falls on a line between two supplied points, for the given x
-//returns Y from slope intercept forumula y=m*x+b, given x
-//DO NOT MIX POSE COORDINATES WITH GRID CELL COORDINATES - MAKE ALL THE SAME
-//****DOES NOT HANDLE VERTICAL LINES****
+/** @brief renvoie l'emplacement de y sur une ligne entre deux points fournis, pour un x donné.
+* renvoie Y à partir de la forumule d'interception de la pente y=m*x+b, pour x donné.
+* NE PAS MÉLANGER LES COORDONNÉES DE LA POSE AVEC LES COORDONNÉES DES CELLULES DE LA GRILLE - LES * RENDRE TOUTES IDENTIQUES
+* NE GÈRE PAS LES LIGNES VERTICALES */
 double get_y_intercept(double x1, double y1, double x2, double y2, double checkX)
 {
     double m = get_m(x1, y1, x2, y2);
@@ -98,10 +110,10 @@ double get_y_intercept(double x1, double y1, double x2, double y2, double checkX
     return m * checkX + b;
 }
 
-//returns where y falls on a line between two supplied points, for the given y
-//returns x from slope intercept forumula y=m*x+b, given y. for x= (y-b)/m
-//DO NOT MIX POSE COORDINATES WITH GRID CELL COORDINATES - MAKE ALL THE SAME
-//****DOES NOT HANDLE VERTICAL LINES****
+/** @brief renvoie la position de y sur une ligne entre deux points fournis, pour y donné.
+* renvoie x à partir de la formule de l'interception de la pente y=m*x+b, pour y donné. x= (y-b)/m
+* NE PAS MÉLANGER LES COORDONNÉES DE LA POSE AVEC LES COORDONNÉES DES CELLULES DE LA GRILLE - LES * RENDRE TOUTES IDENTIQUES
+* NE GÈRE PAS LES LIGNES VERTICALES*/
 double get_x_intercept(double x1, double y1, double x2, double y2, double checkY)
 {
 

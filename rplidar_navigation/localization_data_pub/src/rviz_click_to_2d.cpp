@@ -1,20 +1,41 @@
-/*
- * Automatic Addison
- * Website: https://automaticaddison.com
- *   ROS node that converts the user's desired initial pose and goal location
- *   into a usable format.
- * Subscribe:
- *   initialpose : The initial position and orientation of the robot using 
- *                 quaternions. (geometry_msgs/PoseWithCovarianceStamped)
- *   move_base_simple/goal : Goal position and 
- *                           orientation (geometry_msgs::PoseStamped)
- * Publish: This node publishes to the following topics:   
- *   goal_2d : Goal position and orientation (geometry_msgs::PoseStamped)
- *   initial_2d : The initial position and orientation of the robot using 
- *                Euler angles. (geometry_msgs/PoseStamped)
- * From Practical Robotics in C++ book (ISBN-10 : 9389423465)
- *   by Lloyd Brombach
+/**
+ *
+ * PGE MASTER SME ROBOT MOBILE
+ * Tous droits réservés.
+ *
+ * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * Site web : https://automaticaddison.com
+ * Nœud ROS qui convertit la pose initiale souhaitée par l'utilisateur et l'emplacement du but.
+ * dans un format utilisable.
+ * S'abonner :
+ * initialpose : La position et l'orientation initiales du robot à l'aide de 
+ * quaternions. (geometry_msgs/PoseWithCovarianceStamped)
+ * move_base_simple/goal : Position et * orientation du but. 
+ * orientation (geometry_msgs::PoseStamped)
+ * Publier : Ce nœud publie vers les sujets suivants :   
+ * goal_2d : Position et orientation du but (geometry_msgs::PoseStamped)
+ * initial_2d : La position et l'orientation initiales du robot à l'aide de 
+ * angles d'Euler. (geometry_msgs/PoseStamped)
+ * Tiré du livre Practical Robotics in C++ (ISBN-10 : 9389423465)
+ * par Lloyd Brombach
+ * 
+ * Système LIDAR ROBOT MOBILE
+ * 
+ * @file map_to_image_node.cpp
+ * Fichier map_to_image_node cpp
+ * @author NIANE
+ * @author DIOUME
+ * @author HOURI
+ * @author BOUBACAR
+ * @author DOUKI
+ * @author CAMARA
+ * @date 2022
+ * @version 1.0 
+ * 
+ * 
  */
+
+
 
 // Include statements 
 #include "ros/ros.h"
