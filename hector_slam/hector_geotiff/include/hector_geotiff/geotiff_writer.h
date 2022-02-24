@@ -3,13 +3,12 @@
  * PGE MASTER SME ROBOT MOBILE
  * Tous droits réservés.
  *
- * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * @copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
  * http://www.slamtec.com
  * 
  * Système LIDAR ROBOT MOBILE
  * 
  * @file geotiff_write.h
- * Fichier geotiff_write h
  * @author NIANE
  * @author DIOUME
  * @author HOURI

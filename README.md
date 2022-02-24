@@ -67,7 +67,16 @@ _`Project start date 22/10/2021`_
 <!-- A PROPOS DU PROJET -->
 ## A propos du projet
 
-//////////
+Un robot mobile autonome est un type de robot capable de circuler sans l’intervention de
+l’homme, en toute autonomie, donc capable de se déplacer dans son environnement de
+manière indépendante.
+Cette technologie diffère de son prédécesseur, le véhicule à guidage autonome qui s'appuie
+sur des pistes ou des chemins prédéfinis et nécessite souvent la surveillance d'un opérateur.
+Notre robot utilise un ensemble sophistiqué de capteurs pour planifier la trajectoire, afin
+d'interpréter et de naviguer dans son environnement sans être alimenté par un câble.
+Un capteur indispensable est le lidar représentant les yeux du robot.
+Dans cette documentation, nous vous montrons l’ensemble des paramétrages nécessaires
+pour faire fonctionné le RPlidar A1
 
 ## Connect your RPLIDAR
 ### Prerequisites

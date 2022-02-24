@@ -8,15 +8,14 @@
  * 
  * Système LIDAR ROBOT MOBILE
  * 
- * @file net_socket.cpp
- * Fichier net_socket cpp
+ * @file   net_socket.cpp
  * @author NIANE
  * @author DIOUME
  * @author HOURI
  * @author BOUBACAR
  * @author DOUKI
  * @author CAMARA
- * @date 2022
+ * @date   2022
  * @version 1.0 
  * 
  * 

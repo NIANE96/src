@@ -3,20 +3,20 @@
  * PGE MASTER SME ROBOT MOBILE
  * Tous droits réservés.
  *
- * Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
+ * @Copyright (c) 2014 - 2016 Shanghai Slamtec Co., Ltd.
  * http://www.slamtec.com
  * 
  * Système LIDAR ROBOT MOBILE
  * 
- * @file map_to_image_node.cpp
- * Fichier map_to_image_node cpp
+ * @class  MapAsImageProvider map_to_image_node.h "map_to_image_node.h"
+ * @file   map_to_image_node.cpp
  * @author NIANE
  * @author DIOUME
  * @author HOURI
  * @author BOUBACAR
  * @author DOUKI
  * @author CAMARA
- * @date 2022
+ * @date   2022
  * @version 1.0 
  * 
  * 
@@ -54,14 +54,22 @@ public:
     pose_sub_ = n_.subscribe("pose", 1, &MapAsImageProvider::poseCallback, this);
     map_sub_ = n_.subscribe("map", 1, &MapAsImageProvider::mapCallback, this);
 
-     /** @brief Quel frame_id a du sens ?*/
+     /**
+      * @brief Quel frame_id a du sens ?
+      * 
+      */
     cv_img_full_.header.frame_id = "map_image";
     cv_img_full_.encoding = sensor_msgs::image_encodings::MONO8;
 
     cv_img_tile_.header.frame_id = "map_image";
     cv_img_tile_.encoding = sensor_msgs::image_encodings::MONO8;
 
-     /** @brief Largeur de cellule fixe pour les images basées sur des tiles, utilisez dynamic_reconfigure pour cela plus tard*/
+     /**
+      * @brief Largeur de cellule fixe pour les images basées sur des tiles, utilisez dynamic_reconfigure pour cela plus tard
+      * @var p_size_tiled_map_image_x_
+      * @var p_size_tiled_map_image_y_
+      * 
+      */
     p_size_tiled_map_image_x_ = 64;
     p_size_tiled_map_image_y_ = 64;
 
@@ -73,13 +81,19 @@ public:
     delete image_transport_;
   }
 
-   /** @brief Nous supposons que la position du robot est disponible sous la forme d'un PoseStamped ici (interroger tf serait l'option la plus générale) */
+   /** 
+   * @brief Nous supposons que la position du robot est disponible sous la forme d'un PoseStamped ici (interroger tf serait l'option la plus générale) 
+   * @fn void poseCallback(const geometry_msgs::PoseStampedConstPtr& pose)
+   */
   void poseCallback(const geometry_msgs::PoseStampedConstPtr& pose)
   {
     pose_ptr_ = pose;
   }
 
-   /** @brief La conversion carte->image s'exécute à chaque fois qu'une nouvelle carte est reçue en ce moment*/.
+   /** 
+   * @brief La conversion carte->image s'exécute à chaque fois qu'une nouvelle carte est reçue en ce moment
+   * @see void mapCallback(const nav_msgs::OccupancyGridConstPtr& map)
+   */
   void mapCallback(const nav_msgs::OccupancyGridConstPtr& map)
   {
     int size_x = map->info.width;
@@ -90,11 +104,16 @@ public:
       return;
     }
 
-     /** @brief Seulement si quelqu'un y est abonné, faites le travail et publiez l'image complète de la carte*/.
+     /**
+     * @brief Seulement si quelqu'un y est abonné, faites le travail et publiez l'image complète de la carte
+     *
+     */
     if (image_transport_publisher_full_.getNumSubscribers() > 0){
       cv::Mat* map_mat  = &cv_img_full_.image;
 
-       /** @brief redimensionner l'image cv si elle n'a pas les mêmes dimensions que la carte*/
+    /** 
+    * @brief redimensionner l'image cv si elle n'a pas les mêmes dimensions que la carte
+    */
       if ( (map_mat->rows != size_y) && (map_mat->cols != size_x)){
         *map_mat = cv::Mat(size_y, size_x, CV_8U);
       }
@@ -103,7 +122,10 @@ public:
 
       unsigned char *map_mat_data_p=(unsigned char*) map_mat->data;
 
-       /** @brief Nous devons inverser l'axe y, y pour l'image commence en haut et y pour la carte en bas.*/
+    /**
+    * @brief Nous devons inverser l'axe y, y pour l'image commence en haut et y pour la carte en bas
+    * @var size_y_rev
+    */
       int size_y_rev = size_y-1;
 
       for (int y = size_y_rev; y >= 0; --y){
@@ -134,7 +156,10 @@ public:
       image_transport_publisher_full_.publish(cv_img_full_.toImageMsg());
     }
 
-     /** @brief Seulement si quelqu'un y est abonné, faites le travail et publiez l'image de la carte basée sur les tuiles Vérifiez aussi si pose_ptr_ est valide*/
+     /**
+      * @brief Seulement si quelqu'un y est abonné, faites le travail et publiez l'image de la carte basée sur les tuiles Vérifiez aussi si pose_ptr_ est valide
+      * 
+      */
     if ((image_transport_publisher_tile_.getNumSubscribers() > 0) && (pose_ptr_)){
 
       world_map_transformer_.setTransforms(*map);
@@ -148,7 +173,10 @@ public:
 
       Eigen::Vector2i min_coords_map (rob_position_mapi - tile_size_lower_halfi);
 
-       /** @brief Pince pour les coordonnées inférieures de la carte*/
+       /**
+        * @brief Pince pour les coordonnées inférieures de la carte
+        * 
+        */
       if (min_coords_map[0] < 0){
         min_coords_map[0] = 0;
       }
@@ -159,7 +187,10 @@ public:
 
       Eigen::Vector2i max_coords_map (min_coords_map + Eigen::Vector2i(p_size_tiled_map_image_x_,p_size_tiled_map_image_y_));
 
-       /** @brief Fixation des coordonnées supérieures de la carte*/
+       /**
+        * @brief Fixation des coordonnées supérieures de la carte
+        * 
+        */
       if (max_coords_map[0] > size_x){
 
         int diff = max_coords_map[0] - size_x;
@@ -176,7 +207,10 @@ public:
         max_coords_map[1] = size_y;
       }
 
-       /** @brief Redescendre la pince (dans le cas où la carte est plus petite que la fenêtre de visualisation sélectionnée)*/
+       /**
+        * @brief Redescendre la pince (dans le cas où la carte est plus petite que la fenêtre de visualisation sélectionnée)
+        * 
+        */
       if (min_coords_map[0] < 0){
         min_coords_map[0] = 0;
       }
@@ -189,7 +223,10 @@ public:
 
       cv::Mat* map_mat  = &cv_img_tile_.image;
 
-       /** @brief redimensionner l'image cv si elle n'a pas les mêmes dimensions que la fenêtre de visualisation sélectionnée*/
+       /**
+        * @brief redimensionner l'image cv si elle n'a pas les mêmes dimensions que la fenêtre de visualisation sélectionné
+        * 
+        */
       if ( (map_mat->rows != actual_map_dimensions[0]) || (map_mat->cols != actual_map_dimensions[1])){
         *map_mat = cv::Mat(actual_map_dimensions[0], actual_map_dimensions[1], CV_8U);
       }
@@ -198,7 +235,10 @@ public:
 
       unsigned char *map_mat_data_p=(unsigned char*) map_mat->data;
 
-      /** @brief Nous devons inverser l'axe y, y pour l'image commence en haut et y pour la carte en bas*/
+      /**
+       * @brief Nous devons inverser l'axe y, y pour l'image commence en haut et y pour la carte en bas
+       * 
+       */
       int y_img = max_coords_map[1]-1;
 
       for (int y = min_coords_map[1]; y < max_coords_map[1];++y){
